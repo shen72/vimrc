@@ -6,6 +6,7 @@ set nu
 set expandtab
 
 set cuc
+set hlsearch
 
 syntax on
 filetype plugin on
