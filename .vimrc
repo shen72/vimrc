@@ -1,11 +1,11 @@
 set ts=2
 set sw=2
+set softtabstop=2
 
 set autoindent
 set nu
 set expandtab
 
-set cuc
 set hlsearch
 
 syntax on
@@ -22,14 +22,42 @@ if has("autocmd")
   filetype plugin indent on
 endif
 
-function! s:insert_gates()
+function! s:insert_cc_gates()
   let gatename = substitute(toupper(expand("%:t")), "\\.", "_", "g")
-  execute "normal! i#ifndef " . gatename
-  execute "normal! o#define " . gatename . " "
-  execute "normal! Go#endif /* " . gatename . " */"
+  execute "normal! i// Copyright 2016, Nuro Inc. All rights reserved."
+  execute "normal! oAuthor: Yi Shen (y@nuro.ai)"
+  execute "normal! o"
+  execute "normal! Xx"
+  execute "normal! o#ifndef " . gatename . "_"
+  execute "normal! o#define " . gatename . "_"
+  execute "normal! Go#endif  // " . gatename . "_"
   normal! kk
 endfunction
-autocmd BufNewFile *.{h,hpp} call <SID>insert_gates()
+autocmd BufNewFile *.{h,hpp} call <SID>insert_cc_gates()
+
+function! s:insert_python_gates()
+  execute "normal! i''' "
+  execute "normal! oCopyright 2016, Nuro Inc. All rights reserved."
+  execute "normal! oAuthor: Yi Shen (y@nuro.ai)"
+  execute "normal! o'''"
+  normal! kk
+endfunction
+autocmd BufNewFile *.py call <SID>insert_python_gates()
+
+function! s:insert_proto_gates()
+  execute "normal! i// Copyright 2016, Nuro Inc. All rights reserved."
+  execute "normal! o// Author: Yi Shen (y@nuro.ai)"
+  execute "normal! o//"
+  execute "normal! o//"
+endfunction
+autocmd BufNewFile *.proto call <SID>insert_proto_gates()
+
+function! s:insert_sh_gates()
+  execute "normal! i# Copyright 2016, Nuro Inc. All rights reserved."
+  execute "normal! o# Author: Yi Shen (y@nuro.ai)"
+  normal! kk
+endfunction
+autocmd BufNewFile *.sh call <SID>insert_sh_gates()
 
 augroup filetype
   au! BufRead,BufNewFile *.proto setfiletype proto
@@ -39,3 +67,4 @@ augroup filetype
   au! BufNewFile,BufRead SCons* setfiletype scons
 augroup end
 map <C-n> <ESC><ESC>:vsplit<CR><C-w><C-w>
+map <C-y> <ESC><ESC>:Explore<CR>
